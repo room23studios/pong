@@ -1,24 +1,34 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 
-using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
+using std::string;
 using namespace sf;
 
-int main(){
+TcpSocket socket;
 
-  char x;
+Uint16 ballX;
+Uint16 ballY;
+Uint16 left;
+Uint16 right;
+char isServer;
+
+void sync();
+
+int main() {
+
   unsigned short port;
   string ipString;
 
   TcpListener listener;
-  TcpSocket socket;
   IpAddress address;
-  TcpSocket client;
-
+                                                                                //Asking about settings
   cout << "Hello, there. Welcome in pong. Would you like to host server? y/n" <<endl;
-  cin >> x;
+  cin >> isServer;
 
-  if (x == 'y'){
+  if (isServer == 'y'){
     cout << "What port do you want to host on?" << endl;
     cin >> port;
 
@@ -26,24 +36,23 @@ int main(){
 
     cout << "Hosting on: " << address.toString() << ":" << port <<endl;
 
-    if (listener.listen(25565) != sf::Socket::Done)
+    if (listener.listen(25565) != sf::Socket::Done)                             //Setting up a server
     {
       cout << "Nobody connect" << endl;;
       return 0;
     }
 
-    if (listener.accept(client) != sf::Socket::Done)
+    if (listener.accept(socket) != sf::Socket::Done)
     {
       cout << "Problem here";
       return 0;
     }
 
     cout << "Client connected";
-
     }
 
   else {
-    cout << "What ip should I connect to?" << endl;
+    cout << "What ip should I connect to?" << endl;                             //Connecting to server
     cin >> ipString;
 
     address = IpAddress(ipString);
@@ -56,9 +65,38 @@ int main(){
 
     if (status != Socket::Done)
     {
-      cout << "Cannot connect" << endl;;
+      cout << "Cannot connect" << endl;
       return 0;
     }
-    cout << "Connected" << endl;;
+    cout << "Connected" << endl;
+  }
+
+  if(isServer == 'y')cin >> ballX >> ballY >> right;                            //Code for testing
+  else cin >> left;
+
+  while (true) sync();
+}
+
+void sync() {                                                                   //Synchronization function
+  Packet packetS;
+  Packet packetR;
+
+  if (isServer == 'y') {                                                        //Synchronization on server side
+    packetS << ballX << ballY << right;
+    socket.send(packetS);
+
+    socket.receive(packetR);
+    if (packetR >> left) {
+      cout << left;
+    }
+  }
+  else {
+    socket.receive(packetR);                                                    //Synchronization on client side
+    if (packetR >> ballX >> ballY >> right) {
+      cout << ballX << " " << ballY << " " << right;
+    }
+
+    packetS << left;
+    socket.send(packetS);
   }
 }
