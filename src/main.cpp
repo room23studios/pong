@@ -13,37 +13,37 @@ Uint16 ballX;
 Uint16 ballY;
 Uint16 left;
 Uint16 right;
-char isServer;
+bool isServer;
 
 void sync();
 
 int main() {
 
+  char isServerChar;
   unsigned short port;
   string ipString;
 
   TcpListener listener;
   IpAddress address;
                                                                                 //Asking about settings
-  cout << "Hello, there. Welcome in pong. Would you like to host server? y/n" <<endl;
-  cin >> isServer;
+  cout << "Hello, there. Welcome in pong. Would you like to host server? y/n" << endl;
+  cin >> isServerChar;
+  isServer = (isServerChar == 'y') ? true : false;
 
-  if (isServer == 'y'){
+  if (isServer) {
     cout << "What port do you want to host on?" << endl;
     cin >> port;
 
     address = IpAddress::getLocalAddress();
 
-    cout << "Hosting on: " << address.toString() << ":" << port <<endl;
+    cout << "Hosting on: " << address.toString() << ":" << port << endl;
 
-    if (listener.listen(25565) != sf::Socket::Done)                             //Setting up a server
-    {
+    if (listener.listen(25565) != sf::Socket::Done) {                           //Setting up a server
       cout << "Nobody connect" << endl;;
       return 0;
     }
 
-    if (listener.accept(socket) != sf::Socket::Done)
-    {
+    if (listener.accept(socket) != sf::Socket::Done) {
       cout << "Problem here";
       return 0;
     }
@@ -63,15 +63,14 @@ int main() {
 
     Socket::Status status = socket.connect(address, port);
 
-    if (status != Socket::Done)
-    {
+    if (status != Socket::Done) {
       cout << "Cannot connect" << endl;
       return 0;
     }
     cout << "Connected" << endl;
   }
 
-  if(isServer == 'y')cin >> ballX >> ballY >> right;                            //Code for testing
+  if(isServer)cin >> ballX >> ballY >> right;                                   //Code for testing
   else cin >> left;
 
   while (true) sync();
@@ -81,7 +80,7 @@ void sync() {                                                                   
   Packet packetS;
   Packet packetR;
 
-  if (isServer == 'y') {                                                        //Synchronization on server side
+    if (isServer) {                                                             //Synchronization on server side
     packetS << ballX << ballY << right;
     socket.send(packetS);
 
