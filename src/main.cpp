@@ -19,83 +19,86 @@ void sync();
 
 int main() {
 
-  char isServerChar;
-  unsigned short port;
-  string ipString;
+	char isServerChar;
+	unsigned short port;
+	string ipString;
 
-  TcpListener listener;
-  IpAddress address;
-                                                                                //Asking about settings
-  cout << "Hello, there. Welcome in pong. Would you like to host server? y/n" << endl;
-  cin >> isServerChar;
-  isServer = (isServerChar == 'y') ? true : false;
+	TcpListener listener;
+	IpAddress address;
+	                                                                            //Asking about settings
+	cout << "Hello, there. Welcome in pong. Would you like to host server? y/n" << endl;
+	cin >> isServerChar;
+	isServer = (isServerChar == 'y') ? true : false;
 
-  if (isServer) {
-    cout << "What port do you want to host on?" << endl;
-    cin >> port;
+	if (isServer) {
+		cout << "What port do you want to host on?" << endl;
+		cin >> port;
 
-    address = IpAddress::getLocalAddress();
+		address = IpAddress::getLocalAddress();
 
-    cout << "Hosting on: " << address.toString() << ":" << port << endl;
+		cout << "Hosting on: " << address.toString() << ":" << port << endl;
 
-    if (listener.listen(25565) != sf::Socket::Done) {                           //Setting up a server
-      cout << "Nobody connect" << endl;;
-      return 0;
-    }
+		if (listener.listen(25565) != sf::Socket::Done) {                           //Setting up a server
+			cout << "Nobody connect" << endl;;
+			return 0;
+		}
 
-    if (listener.accept(socket) != sf::Socket::Done) {
-      cout << "Problem here";
-      return 0;
-    }
+		if (listener.accept(socket) != sf::Socket::Done) {
+			cout << "Problem here";
+			return 0;
+		}
 
-    cout << "Client connected";
-    }
+		cout << "Client connected";
+	}
 
-  else {
-    cout << "What ip should I connect to?" << endl;                             //Connecting to server
-    cin >> ipString;
+	else {
+		cout << "What ip should I connect to?" << endl;                             //Connecting to server
+		cin >> ipString;
 
-    address = IpAddress(ipString);
+		address = IpAddress(ipString);
 
-    cout << "What port should I connect to?" << endl;
-    cin >> port;
-    cout << "Connecting to: " << address.toString() << ":" << port << " ..." << endl;
+		cout << "What port should I connect to?" << endl;
+		cin >> port;
+		cout << "Connecting to: " << address.toString() << ":" << port << " ..." << endl;
 
-    Socket::Status status = socket.connect(address, port);
+		Socket::Status status = socket.connect(address, port);
 
-    if (status != Socket::Done) {
-      cout << "Cannot connect" << endl;
-      return 0;
-    }
-    cout << "Connected" << endl;
-  }
+		if (status != Socket::Done) {
+			cout << "Cannot connect" << endl;
+			return 0;
+		}
+		cout << "Connected" << endl;
+	}
 
-  if(isServer)cin >> ballX >> ballY >> right;                                   //Code for testing
-  else cin >> left;
+	if(isServer)
+		cin >> ballX >> ballY >> right;                                   //Code for testing
+	else
+		cin >> left;
 
-  while (true) sync();
+	while(true)
+		sync();
 }
 
 void sync() {                                                                   //Synchronization function
-  Packet packetS;
-  Packet packetR;
+	Packet packetS;
+	Packet packetR;
 
-    if (isServer) {                                                             //Synchronization on server side
-    packetS << ballX << ballY << right;
-    socket.send(packetS);
+	if (isServer) {                                                             //Synchronization on server side
+		packetS << ballX << ballY << right;
+		socket.send(packetS);
 
-    socket.receive(packetR);
-    if (packetR >> left) {
-      cout << left;
-    }
-  }
-  else {
-    socket.receive(packetR);                                                    //Synchronization on client side
-    if (packetR >> ballX >> ballY >> right) {
-      cout << ballX << " " << ballY << " " << right;
-    }
+		socket.receive(packetR);
+		if (packetR >> left) {
+			cout << left;
+		}
+	}
+	else {
+		socket.receive(packetR);                                                    //Synchronization on client side
+		if (packetR >> ballX >> ballY >> right) {
+			cout << ballX << " " << ballY << " " << right;
+		}
 
-    packetS << left;
-    socket.send(packetS);
-  }
+		packetS << left;
+		socket.send(packetS);
+	}
 }
