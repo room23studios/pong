@@ -38,7 +38,7 @@ int main() {
 
 		cout << "Hosting on: " << address.toString() << ":" << port << endl;
 
-		if (listener.listen(25565) != sf::Socket::Done) {                           //Setting up a server
+		if (listener.listen(port) != sf::Socket::Done) {                           //Setting up a server
 			cout << "Nobody connect" << endl;;
 			return 0;
 		}
