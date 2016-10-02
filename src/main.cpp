@@ -1,8 +1,7 @@
-#include <SFML/Graphics.hpp>
-
-using namespace std;
-using namespace sf;
+#include "game.hpp"
 
 int main() {
+	Game game;
+	game.start();
 
 }
