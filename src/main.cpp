@@ -1,10 +1,7 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 
-using std::cout;
-using std::cin;
-using std::endl;
-using std::string;
+using namespace std;
 using namespace sf;
 
 TcpSocket socket;
