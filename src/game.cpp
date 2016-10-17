@@ -4,6 +4,9 @@ Game::Game() {
 	window.create(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Pong");
 
 	ball = Ball(BALL_RADIUS);
+
+	gameState = pause;
+
 	player1 = Paddle(PADDLE_WIDTH, PADDLE_HEIGHT);
 	player2 = Paddle(PADDLE_WIDTH, PADDLE_HEIGHT);
 }
@@ -29,7 +32,10 @@ void Game::loop() {
 				case Event::Closed:
 					window.close();
 					break;
-
+				case Event::KeyPressed:
+					if (event.key.code == Keyboard::P) gameState = play;
+					if (event.key.code == Keyboard::O) gameState = pause;
+					break;
 				default:
 					continue;
 			}
@@ -45,11 +51,17 @@ void Game::loop() {
 
 		window.clear();
 
-		ball.update();
+		if(gameState == play) {
 
-		window.draw(ball.sprite);
-		window.draw(player1.sprite);
-		window.draw(player2.sprite);
+			ball.update();
+
+			window.draw(ball.sprite);
+			window.draw(player1.sprite);
+			window.draw(player2.sprite);
+		}
+		if(gameState == pause) {
+			window.draw(menu.pongText);
+		}
 
 		window.display();
 	}
