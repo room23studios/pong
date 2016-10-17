@@ -8,6 +8,3 @@ Menu::Menu() {
 	pongText.setPosition(280, 180);
 	pongText.setColor(sf::Color::White);
 }
-void Menu::refresh(){
-
-}
