@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "ball.hpp"
+#include "menu.hpp"
 
 using namespace sf;
 
@@ -8,6 +9,7 @@ class Game {
 private:
 	RenderWindow window;
 
+	Menu menu;
 	Ball ball;
 	RectangleShape player1;
 	RectangleShape player2;
@@ -22,4 +24,11 @@ public:
 	void start();
 	void loop();
 	void setBallAndPaddlesPosition();
+
+	enum GameState {
+		pause,
+		play
+	};
+	GameState gameState;
+
 };
