@@ -3,7 +3,7 @@
 Game::Game() {
 	window.create(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Pong");
 
-	ball = CircleShape(BALL_RADIUS);
+	ball = Ball(BALL_RADIUS);
 	player1 = RectangleShape(Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT));
 	player2 = RectangleShape(Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT));
 }
@@ -14,12 +14,14 @@ void Game::start() {
 }
 
 void Game::setBallAndPaddlesPosition() {
-	ball.setPosition(WINDOW_WIDTH / 2 - BALL_RADIUS / 2, WINDOW_HEIGHT / 2 - BALL_RADIUS / 2);
+	ball.sprite.setPosition(WINDOW_WIDTH / 2 - BALL_RADIUS / 2, WINDOW_HEIGHT / 2 - BALL_RADIUS / 2);
 	player1.setPosition(WINDOW_WIDTH - PADDLE_WIDTH, WINDOW_HEIGHT / 2 - PADDLE_HEIGHT / 2);
 	player2.setPosition(0, WINDOW_HEIGHT / 2 - PADDLE_HEIGHT / 2);
 }
 
 void Game::loop() {
+	window.setFramerateLimit(MAX_FPS);
+
 	while(window.isOpen()) {
 		Event event;
 		while(window.pollEvent(event)) {
@@ -32,7 +34,9 @@ void Game::loop() {
 
 		window.clear();
 
-		window.draw(ball);
+		ball.update();
+
+		window.draw(ball.sprite);
 		window.draw(player1);
 		window.draw(player2);
 
