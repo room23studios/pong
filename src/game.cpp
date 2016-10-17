@@ -29,6 +29,8 @@ void Game::loop() {
 				case Event::Closed:
 					window.close();
 					break;
+				default:
+					continue;
 			}
 		}
 
