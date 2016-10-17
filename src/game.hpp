@@ -2,6 +2,7 @@
 
 #include "ball.hpp"
 #include "menu.hpp"
+#include "paddle.hpp"
 
 using namespace sf;
 
@@ -11,8 +12,8 @@ private:
 
 	Menu menu;
 	Ball ball;
-	RectangleShape player1;
-	RectangleShape player2;
+	Paddle player1;
+	Paddle player2;
 
 	const int WINDOW_WIDTH = 640, WINDOW_HEIGHT = 480;
 	const float BALL_RADIUS = 10, PADDLE_WIDTH = 10, PADDLE_HEIGHT = 50;

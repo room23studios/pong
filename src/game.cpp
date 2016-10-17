@@ -4,10 +4,12 @@ Game::Game() {
 	window.create(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Pong");
 
 	ball = Ball(BALL_RADIUS);
-	player1 = RectangleShape(Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT));
-	player2 = RectangleShape(Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT));
+
 	gameState = pause;
-	}
+
+	player1 = Paddle(PADDLE_WIDTH, PADDLE_HEIGHT);
+	player2 = Paddle(PADDLE_WIDTH, PADDLE_HEIGHT);
+}
 
 void Game::start() {
 	setBallAndPaddlesPosition();
@@ -16,8 +18,8 @@ void Game::start() {
 
 void Game::setBallAndPaddlesPosition() {
 	ball.sprite.setPosition(WINDOW_WIDTH / 2 - BALL_RADIUS / 2, WINDOW_HEIGHT / 2 - BALL_RADIUS / 2);
-	player1.setPosition(WINDOW_WIDTH - PADDLE_WIDTH, WINDOW_HEIGHT / 2 - PADDLE_HEIGHT / 2);
-	player2.setPosition(0, WINDOW_HEIGHT / 2 - PADDLE_HEIGHT / 2);
+	player1.sprite.setPosition(WINDOW_WIDTH - PADDLE_WIDTH, WINDOW_HEIGHT / 2 - PADDLE_HEIGHT / 2);
+	player2.sprite.setPosition(0, WINDOW_HEIGHT / 2 - PADDLE_HEIGHT / 2);
 }
 
 void Game::loop() {
@@ -37,7 +39,16 @@ void Game::loop() {
 				default:
 					continue;
 			}
+
+
 		}
+
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+			player1.moveUp();
+
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			player1.moveDown();
+
 		window.clear();
 
 		if(gameState == play) {
@@ -45,8 +56,8 @@ void Game::loop() {
 			ball.update();
 
 			window.draw(ball.sprite);
-			window.draw(player1);
-			window.draw(player2);
+			window.draw(player1.sprite);
+			window.draw(player2.sprite);
 		}
 		if(gameState == pause) {
 			window.draw(menu.pongText);
