@@ -1,8 +1,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "ball.hpp"
-#include "menu.hpp"
 #include "paddle.hpp"
+#include "button.hpp"
 
 using namespace sf;
 
@@ -10,7 +10,6 @@ class Game {
 private:
 	RenderWindow window;
 
-	Menu menu;
 	Ball ball;
 	Paddle player1;
 	Paddle player2;
@@ -31,5 +30,4 @@ public:
 		play
 	};
 	GameState gameState;
-
 };
